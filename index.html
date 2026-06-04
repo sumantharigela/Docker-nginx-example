@@ -1,111 +1,700 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Movie Ticket Booking</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>BookMyShow Clone | Movie Ticket Booking</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
-            padding: 30px;
+            background: #0f0f14;
+            color: #eef2ff;
         }
 
-        .container {
-            background: white;
-            width: 400px;
-            margin: auto;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px gray;
+        /* Header / Navbar */
+        .navbar {
+            background: #1a1c2b;
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 1px solid #2d2f42;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        h1 {
-            color: #333;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        select, input {
-            width: 90%;
-            padding: 10px;
-            margin: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+        .logo-icon {
+            font-size: 2rem;
         }
 
-        button {
-            background-color: green;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #F84464, #FF8C42);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .city-picker {
+            background: #25283b;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
             cursor: pointer;
         }
 
-        button:hover {
-            background-color: darkgreen;
+        /* Main Container */
+        .main-container {
+            max-width: 1300px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
         }
 
-        #result {
-            margin-top: 20px;
+        /* Movie Info Card */
+        .movie-hero {
+            background: linear-gradient(145deg, #1e2035, #14162a);
+            border-radius: 2rem;
+            padding: 1.2rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 140, 66, 0.2);
+        }
+
+        .movie-details h2 {
+            font-size: 1.7rem;
+            font-weight: 700;
+        }
+
+        .movie-details p {
+            color: #b9c3e6;
+            margin-top: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .rating {
+            background: #2a2e48;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #ffd966;
+        }
+
+        .select-movie {
+            background: #252a41;
+            border-radius: 2rem;
+            padding: 0.6rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .select-movie label {
+            font-weight: 600;
+        }
+
+        #movieSelect {
+            background: #0f111f;
+            border: 1px solid #f85c3e;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            color: white;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        /* Layout: two columns */
+        .booking-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .seat-map-section {
+            flex: 2;
+            min-width: 280px;
+            background: #13152a;
+            border-radius: 2rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2a2e4a;
+        }
+
+        .booking-summary-card {
+            flex: 1;
+            min-width: 260px;
+            background: #13152a;
+            border-radius: 2rem;
+            padding: 1.5rem;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            border: 1px solid #2a2e4a;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Screen & Seats */
+        .screen-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .screen {
+            background: linear-gradient(90deg, #1f2340, #3c3f66, #1f2340);
+            width: 85%;
+            margin: 0 auto;
+            height: 10px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(255, 100, 50, 0.5);
+            position: relative;
+        }
+
+        .screen-label {
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            margin-top: 8px;
+            color: #fb9e6e;
+        }
+
+        .seats-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 0.55rem;
+            margin: 1.8rem 0;
+            justify-items: center;
+        }
+
+        .seat {
+            background: #2c3153;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            max-width: 48px;
+            border-radius: 12px 12px 8px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #d4e0ff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            border: 1px solid #4a4f74;
+        }
+
+        .seat.available:hover {
+            background: #4e5a8c;
+            transform: scale(1.05);
+            border-color: #ffaa66;
+        }
+
+        .seat.selected {
+            background: linear-gradient(145deg, #f97316, #f43f5e);
+            color: white;
+            box-shadow: 0 0 12px #f97316;
+            border-color: #ffd966;
             font-weight: bold;
-            color: blue;
+        }
+
+        .seat.booked {
+            background: #3d2a2e;
+            background: linear-gradient(145deg, #4a2a2a, #391f1f);
+            cursor: not-allowed;
+            opacity: 0.6;
+            text-decoration: line-through;
+            color: #b28686;
+            border-color: #5e3a3a;
+        }
+
+        /* legend */
+        .legend {
+            display: flex;
+            justify-content: space-around;
+            margin: 1rem 0 0.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .legend-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.7rem;
+        }
+
+        .seat-sample {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+        }
+
+        /* summary card */
+        .summary-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-left: 4px solid #f97316;
+            padding-left: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .selected-seats-list {
+            background: #0b0d1c;
+            border-radius: 1.2rem;
+            padding: 0.8rem;
+            min-height: 100px;
+            max-height: 180px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+
+        .seat-tag {
+            display: inline-block;
+            background: #f97316;
+            color: #1e1a0c;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            margin: 0.2rem;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.8rem 0;
+            padding: 0.5rem 0;
+            border-top: 1px dashed #3d4068;
+        }
+
+        .total-row {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #ffbc6e;
+            border-top: 2px solid #f97316;
+            margin-top: 0.4rem;
+            padding-top: 0.7rem;
+        }
+
+        .book-button {
+            background: linear-gradient(95deg, #f43f5e, #f97316);
+            width: 100%;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 1rem;
+            color: white;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .book-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
+        }
+
+        .clear-btn {
+            background: #2d3153;
+            width: 100%;
+            border: none;
+            padding: 0.6rem;
+            border-radius: 40px;
+            font-weight: 500;
+            margin-top: 0.7rem;
+            color: #ffdfb3;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e1f32e6;
+            backdrop-filter: blur(16px);
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: 500;
+            z-index: 1000;
+            border-left: 5px solid #f97316;
+            color: #fff2df;
+            pointer-events: none;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            box-shadow: 0 8px 20px black;
+        }
+
+        @media (max-width: 800px) {
+            .seats-grid {
+                gap: 0.4rem;
+            }
+            .seat {
+                font-size: 0.6rem;
+            }
+            .navbar {
+                padding: 0.8rem 1rem;
+            }
+            .toast {
+                white-space: normal;
+                text-align: center;
+                max-width: 90%;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>🎬 Movie Ticket Booking</h1>
+<div class="navbar">
+    <div class="logo">
+        <span class="logo-icon">🎬</span>
+        <h1>bookMyShow</h1>
+    </div>
+    <div class="city-picker">
+        <span>📍</span> Mumbai <span>▼</span>
+    </div>
+</div>
 
-    <label>Select Movie</label><br>
-    <select id="movie">
-        <option value="200">Pushpa 3 - ₹200</option>
-        <option value="250">Salaar 2 - ₹250</option>
-        <option value="180">Kalki 2 - ₹180</option>
-        <option value="220">Jailer 2 - ₹220</option>
-    </select>
+<div class="main-container">
+    <div class="movie-hero">
+        <div class="movie-details">
+            <h2>DEADPOOL & WOLVERINE</h2>
+            <p><span class="rating">⭐ 8.7 ★★★★★</span> <span>2D · English · 2h 8m</span> <span>🎥 IMAX available</span></p>
+        </div>
+        <div class="select-movie">
+            <label>🎞️ Change movie:</label>
+            <select id="movieSelect">
+                <option value="14.99">🔥 DEADPOOL & WOLVERINE - $14.99</option>
+                <option value="12.49">🕸️ SPIDER-MAN: ACROSS THE SPIDER-VERSE - $12.49</option>
+                <option value="15.99">🚀 INTERSTELLAR (Re-release) - $15.99</option>
+                <option value="11.99">🧙 HARRY POTTER AND THE PRISONER OF AZKABAN - $11.99</option>
+                <option value="13.49">🎸 THE BATMAN - PART II - $13.49</option>
+            </select>
+        </div>
+    </div>
 
-    <br>
+    <div class="booking-layout">
+        <!-- Seat Map Section -->
+        <div class="seat-map-section">
+            <div class="screen-container">
+                <div class="screen"></div>
+                <div class="screen-label">SCREEN THIS WAY ➡</div>
+            </div>
 
-    <label>Your Name</label><br>
-    <input type="text" id="name" placeholder="Enter your name">
+            <div class="seats-grid" id="seatsGrid"></div>
 
-    <br>
+            <div class="legend">
+                <div class="legend-badge"><div class="seat-sample" style="background:#2c3153; border:1px solid #6a6f96;"></div> Available</div>
+                <div class="legend-badge"><div class="seat-sample" style="background:linear-gradient(145deg,#f97316,#f43f5e);"></div> Selected</div>
+                <div class="legend-badge"><div class="seat-sample" style="background:#4a2a2a; opacity:0.6;"></div> Booked</div>
+            </div>
+            <p style="font-size:0.7rem; text-align:center; margin-top:12px; color:#7c81ac;">💡 Click on seats to select/unselect | Double-click on "Clear" to reset all seats</p>
+        </div>
 
-    <label>Number of Tickets</label><br>
-    <input type="number" id="tickets" min="1" placeholder="Enter ticket count">
-
-    <br>
-
-    <button onclick="bookTicket()">Book Now</button>
-
-    <div id="result"></div>
+        <!-- Booking Summary Panel (BookMyShow style) -->
+        <div class="booking-summary-card">
+            <div class="summary-header">🎟️ Booking Summary</div>
+            <div>
+                <div style="font-weight:500; margin-bottom:0.5rem;">Selected Seats</div>
+                <div class="selected-seats-list" id="selectedSeatsList">
+                    <span style="color:#8d93c2;">— none selected —</span>
+                </div>
+            </div>
+            <div class="price-row">
+                <span>Ticket Price</span>
+                <span id="ticketPriceDisplay">$14.99</span>
+            </div>
+            <div class="price-row">
+                <span>Seats Count</span>
+                <span id="seatCountDisplay">0</span>
+            </div>
+            <div class="price-row total-row">
+                <span>🎯 Grand Total</span>
+                <span id="totalAmount">$0.00</span>
+            </div>
+            <button class="book-button" id="bookBtn">🎟️ CONFIRM & PAY</button>
+            <button class="clear-btn" id="clearSelectionBtn">🗑️ Clear Selection</button>
+            <button class="clear-btn" id="fullResetBtn" style="background:#221f3b; margin-top:8px;">⟳ Reset All Seats (Demo)</button>
+        </div>
+    </div>
 </div>
 
 <script>
-function bookTicket() {
-
-    let movie = document.getElementById("movie");
-    let movieName = movie.options[movie.selectedIndex].text;
-    let price = parseInt(movie.value);
-
-    let name = document.getElementById("name").value;
-    let tickets = parseInt(document.getElementById("tickets").value);
-
-    if(name === "" || isNaN(tickets) || tickets <= 0){
-        alert("Please enter valid details");
-        return;
+    // ========== BookMyShow Style Interactive Seat Matrix ==========
+    const ROWS = 6;       // A B C D E F
+    const COLS = 10;      // 1-10
+    
+    // Pre-booked seats (simulate some booked by others)
+    const INIT_BOOKED_SEATS = [
+        [0,1], [0,2], [1,5], [1,6], [2,0], [2,9], [3,3], [3,7], [4,8], [5,1], [5,2], [2,4], [4,4]
+    ];
+    
+    let bookedMatrix = Array(ROWS).fill().map(() => Array(COLS).fill(false));
+    let selectedMatrix = Array(ROWS).fill().map(() => Array(COLS).fill(false));
+    
+    // Helper init booked
+    function initBooked() {
+        for (let i = 0; i < ROWS; i++) {
+            for (let j = 0; j < COLS; j++) {
+                bookedMatrix[i][j] = false;
+            }
+        }
+        for (let [r,c] of INIT_BOOKED_SEATS) {
+            if (r < ROWS && c < COLS) bookedMatrix[r][c] = true;
+        }
     }
-
-    let totalAmount = price * tickets;
-
-    document.getElementById("result").innerHTML =
-        "✅ Booking Confirmed!<br><br>" +
-        "Customer: " + name + "<br>" +
-        "Movie: " + movieName + "<br>" +
-        "Tickets: " + tickets + "<br>" +
-        "Total Amount: ₹" + totalAmount;
-}
+    
+    // Get current price per ticket
+    function getCurrentPrice() {
+        const select = document.getElementById('movieSelect');
+        return parseFloat(select.value);
+    }
+    
+    // Update summary: seat list, counts, total
+    function updateSummaryPanel() {
+        let selectedSeats = [];
+        for (let i = 0; i < ROWS; i++) {
+            for (let j = 0; j < COLS; j++) {
+                if (selectedMatrix[i][j]) {
+                    const rowLetter = String.fromCharCode(65 + i);
+                    const seatNum = j + 1;
+                    selectedSeats.push(`${rowLetter}${seatNum}`);
+                }
+            }
+        }
+        
+        const seatCount = selectedSeats.length;
+        const price = getCurrentPrice();
+        const total = seatCount * price;
+        
+        // update list container
+        const listContainer = document.getElementById('selectedSeatsList');
+        if (selectedSeats.length === 0) {
+            listContainer.innerHTML = '<span style="color:#8d93c2;">— none selected —</span>';
+        } else {
+            listContainer.innerHTML = selectedSeats.map(seat => `<span class="seat-tag">${seat}</span>`).join('');
+        }
+        
+        document.getElementById('seatCountDisplay').innerText = seatCount;
+        document.getElementById('totalAmount').innerText = `$${total.toFixed(2)}`;
+        document.getElementById('ticketPriceDisplay').innerText = `$${price.toFixed(2)}`;
+    }
+    
+    // render seat grid (colorful, interactive)
+    function renderSeats() {
+        const grid = document.getElementById('seatsGrid');
+        grid.innerHTML = '';
+        
+        for (let row = 0; row < ROWS; row++) {
+            for (let col = 0; col < COLS; col++) {
+                const seatDiv = document.createElement('div');
+                seatDiv.classList.add('seat');
+                const isBooked = bookedMatrix[row][col];
+                const isSelected = selectedMatrix[row][col];
+                const rowLetter = String.fromCharCode(65 + row);
+                const seatNumber = col + 1;
+                seatDiv.innerText = `${rowLetter}${seatNumber}`;
+                
+                if (isBooked) {
+                    seatDiv.classList.add('booked');
+                } else if (isSelected) {
+                    seatDiv.classList.add('selected');
+                } else {
+                    seatDiv.classList.add('available');
+                }
+                
+                seatDiv.addEventListener('click', (function(r,c) {
+                    return function() { onSeatClick(r,c); };
+                })(row, col));
+                
+                grid.appendChild(seatDiv);
+            }
+        }
+        updateSummaryPanel();
+    }
+    
+    // Seat click logic (toggle select if not booked)
+    function onSeatClick(row, col) {
+        if (bookedMatrix[row][col]) {
+            showToast(`❌ Seat ${String.fromCharCode(65+row)}${col+1} is already booked!`, "#f97316");
+            return;
+        }
+        
+        if (selectedMatrix[row][col]) {
+            selectedMatrix[row][col] = false;
+            showToast(`🔓 Removed ${String.fromCharCode(65+row)}${col+1}`, "#facc15");
+        } else {
+            selectedMatrix[row][col] = true;
+            showToast(`🎯 Added ${String.fromCharCode(65+row)}${col+1} - $${getCurrentPrice().toFixed(2)}`, "#4ade80");
+        }
+        renderSeats();
+    }
+    
+    // Clear selection only
+    function clearSelectionOnly() {
+        let any = false;
+        for (let i=0; i<ROWS; i++) {
+            for (let j=0; j<COLS; j++) {
+                if (selectedMatrix[i][j]) any = true;
+                selectedMatrix[i][j] = false;
+            }
+        }
+        if (any) showToast("🧹 Selection cleared! Choose new seats.", "#ffb347");
+        else showToast("👀 No selected seats to clear", "#94a3b8");
+        renderSeats();
+    }
+    
+    // Confirm Booking (like BookMyShow final step)
+    function confirmBooking() {
+        let selectedList = [];
+        for (let i=0; i<ROWS; i++) {
+            for (let j=0; j<COLS; j++) {
+                if (selectedMatrix[i][j]) {
+                    selectedList.push(`${String.fromCharCode(65+i)}${j+1}`);
+                }
+            }
+        }
+        if (selectedList.length === 0) {
+            showToast("⚠️ Please select at least one seat to book!", "#f97316");
+            return;
+        }
+        
+        const totalPrice = (selectedList.length * getCurrentPrice()).toFixed(2);
+        const movieName = document.getElementById('movieSelect').options[document.getElementById('movieSelect').selectedIndex].text.split(' - ')[0];
+        
+        // Mark selected seats as permanently booked
+        for (let i=0; i<ROWS; i++) {
+            for (let j=0; j<COLS; j++) {
+                if (selectedMatrix[i][j]) {
+                    bookedMatrix[i][j] = true;
+                    selectedMatrix[i][j] = false;
+                }
+            }
+        }
+        
+        // success toast & message
+        showToast(`✅ BOOKED! ${selectedList.join(', ')} for "${movieName}" • $${totalPrice}`, "#4ade80", 3500);
+        renderSeats();
+        
+        // Additional modal style alert (simulate success)
+        const successMsg = document.createElement('div');
+        successMsg.innerText = `🎉 Booking Confirmed! 🎉\nMovie: ${movieName}\nSeats: ${selectedList.join(', ')}\nTotal: $${totalPrice}`;
+        successMsg.style.position = 'fixed';
+        successMsg.style.bottom = '80px';
+        successMsg.style.left = '50%';
+        successMsg.style.transform = 'translateX(-50%)';
+        successMsg.style.background = '#181c32';
+        successMsg.style.border = '1px solid #f97316';
+        successMsg.style.padding = '12px 20px';
+        successMsg.style.borderRadius = '40px';
+        successMsg.style.fontWeight = 'bold';
+        successMsg.style.zIndex = '1001';
+        successMsg.style.backdropFilter = 'blur(12px)';
+        successMsg.style.fontSize = '0.85rem';
+        successMsg.style.color = '#ffefcf';
+        successMsg.style.textAlign = 'center';
+        document.body.appendChild(successMsg);
+        setTimeout(() => successMsg.remove(), 4000);
+    }
+    
+    // Full reset to original demo state (clears all selections AND resets booked seats to initial demo)
+    function fullResetDemo() {
+        initBooked();  // reset booked to initial pattern
+        // clear all selected seats
+        for (let i=0; i<ROWS; i++) {
+            for (let j=0; j<COLS; j++) {
+                selectedMatrix[i][j] = false;
+            }
+        }
+        renderSeats();
+        showToast("🔄 Theater reset to demo mode! All booked seats restored as per initial layout.", "#facc15", 2800);
+    }
+    
+    // Movie change handler -> update total and ensure UI refresh
+    function onMovieChanged() {
+        renderSeats(); // re-render (preserve selected seats but price updates)
+        const price = getCurrentPrice();
+        showToast(`🎬 Movie updated — price per ticket: $${price.toFixed(2)}`, "#facc15");
+    }
+    
+    // Toast notification
+    let toastTimer;
+    function showToast(message, colorBorder = "#f97316", duration = 2000) {
+        const existingToast = document.querySelector('.toast');
+        if (existingToast) existingToast.remove();
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerText = message;
+        toast.style.borderLeftColor = colorBorder;
+        document.body.appendChild(toast);
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+            if (toast && toast.remove) toast.remove();
+        }, duration);
+    }
+    
+    // additional interactive: double-click clear button resets everything, but we already have fullResetBtn
+    // add event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+        initBooked();
+        renderSeats();
+        
+        document.getElementById('movieSelect').addEventListener('change', onMovieChanged);
+        document.getElementById('bookBtn').addEventListener('click', confirmBooking);
+        document.getElementById('clearSelectionBtn').addEventListener('click', clearSelectionOnly);
+        document.getElementById('fullResetBtn').addEventListener('click', fullResetDemo);
+        
+        // bonus: tooltip effect on seats?
+    });
+    
+    // also when price changes, we update summary correctly in render function
+    // manual update via event from movie selection
+    window.addEventListener('load', () => {
+        // final styles for seat grid responsiveness
+        const style = document.createElement('style');
+        style.textContent = `
+            .seat:active { transform: scale(0.96); }
+            .book-button:active { transform: scale(0.97);}
+            .selected-seats-list::-webkit-scrollbar { width: 4px; background: #242842; border-radius: 10px; }
+            .selected-seats-list::-webkit-scrollbar-thumb { background: #f97316; border-radius: 10px; }
+        `;
+        document.head.appendChild(style);
+    });
 </script>
-
 </body>
 </html>
