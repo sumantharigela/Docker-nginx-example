@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Ticket Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .container {
+            background: white;
+            width: 400px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        select, input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: green;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: darkgreen;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎬 Movie Ticket Booking</h1>
+
+    <label>Select Movie</label><br>
+    <select id="movie">
+        <option value="200">Pushpa 3 - ₹200</option>
+        <option value="250">Salaar 2 - ₹250</option>
+        <option value="180">Kalki 2 - ₹180</option>
+        <option value="220">Jailer 2 - ₹220</option>
+    </select>
+
+    <br>
+
+    <label>Your Name</label><br>
+    <input type="text" id="name" placeholder="Enter your name">
+
+    <br>
+
+    <label>Number of Tickets</label><br>
+    <input type="number" id="tickets" min="1" placeholder="Enter ticket count">
+
+    <br>
+
+    <button onclick="bookTicket()">Book Now</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+function bookTicket() {
+
+    let movie = document.getElementById("movie");
+    let movieName = movie.options[movie.selectedIndex].text;
+    let price = parseInt(movie.value);
+
+    let name = document.getElementById("name").value;
+    let tickets = parseInt(document.getElementById("tickets").value);
+
+    if(name === "" || isNaN(tickets) || tickets <= 0){
+        alert("Please enter valid details");
+        return;
+    }
+
+    let totalAmount = price * tickets;
+
+    document.getElementById("result").innerHTML =
+        "✅ Booking Confirmed!<br><br>" +
+        "Customer: " + name + "<br>" +
+        "Movie: " + movieName + "<br>" +
+        "Tickets: " + tickets + "<br>" +
+        "Total Amount: ₹" + totalAmount;
+}
+</script>
+
+</body>
+</html>
